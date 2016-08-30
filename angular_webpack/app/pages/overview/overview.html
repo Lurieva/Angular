@@ -1,0 +1,21 @@
+<div class="main-container">
+  <div class="container">
+    <div class="overview_container">
+      <h1>Items</h1>
+
+      <input type="text" ng-model="$ctrl.todo.todoText" size="25" placeholder="Type name here...">
+      <button class="btn_save" ng-click="$ctrl.save($ctrl.todo)">Add new</button>
+
+      <div class="todo_container" ng-repeat="todo in $ctrl.todos"
+        ng-click="$ctrl.findCurrentIndex($index); $ctrl.setCurrentTodo($index)"
+        ng-class="{'current-todo': $index == $ctrl.currentIndex }">
+
+        <span ng-bind="todo.todoText"></span>
+        <span class="col-msg-todo" ng-bind="todo.messages.length"></span>
+        <span type="submit" class="btn_delete" ng-click="$ctrl.remove($index)">Delete</span>
+      </div>
+
+    </div>
+  </div>
+  <overview-msg todo=$ctrl.todos[$ctrl.currentIndex]></overview-msg>
+</div>

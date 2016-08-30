@@ -1,0 +1,35 @@
+body {
+  margin-left: 50px;
+}
+
+.error {
+  color: #ff0000;
+}
+
+.hint {
+  color: #87cefa;
+}
+
+form {
+  margin: 20px;
+}
+
+form input.ng-invalid.ng-touched {
+  background-color:  #fff0f5;
+}
+
+form input.ng-valid.ng-touched {
+  background-color: #f0fff0;
+}
+
+.info-user {
+  color: #0000cd;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.checkbox {
+  color: #4682b4;
+  font-weight: bold;
+  font-size: 16px;
+}

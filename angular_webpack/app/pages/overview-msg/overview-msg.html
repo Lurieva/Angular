@@ -1,0 +1,21 @@
+<div class="overview-msg">
+  <h2>Messages # {{$ctrl.todo.id}}</h2>
+  <div class="overview-msg_container" ng-repeat="msg in $ctrl.todo.messages">
+    <div class="msg-container">
+      <div class="msg-img"></div>
+      <div class="msg-content">
+        <p>{{msg}}</p>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="msg-container new-msg-container">
+      <div class="msg-img new-msg-img"></div>
+      <div class="msg-content">
+        <textarea class="new-msg" cols="42"
+          ng-model="newMsg"
+          ng-keydown="$event.which === 13 && $ctrl.addMsg(newMsg)">
+        </textarea>
+      </div>
+  </div>
+</div>

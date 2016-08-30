@@ -1,0 +1,39 @@
+<nav class="navbar navbar-default">
+    <div class="container-fluid col-md-12">
+        <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav col-md-8">
+                <li class="active" ui-sref-active="active" ui-sref="app.home"><a href="/home">HOME</a></li>
+                <li ui-sref-active="active" ui-sref="app.service"><a href="/service">Service</a></li>
+                <li ui-sref-active="active" ui-sref="app.products"><a href="/products">Products</a></li>
+                <li ui-sref-active="active" ui-sref="app.overview"><a href="/overview">Overview</a></li>
+            </ul>
+            <ul class="col-md-4 nav navbar-nav col-md-offset-left-8">
+
+                <li class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                        Language
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">RU</a></li>
+                        <li><a href="#">EN</a></li>
+                        <li><a href="#">FR</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#!/region" class="dropdown-toggle" data-toggle="dropdown">
+                        Region
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>UK</li>
+                        <li>USA</li>
+                        <li>Ukraine</li>
+                    </ul>
+                </li>
+                <li ui-sref-active="active" ui-sref="app.signin"><a href="/signin">Sign in</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
