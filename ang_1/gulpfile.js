@@ -1,6 +1,5 @@
 var gulp            = require('gulp');
 var concat          = require('gulp-concat');
-var browserify      = require('browserify');
 var source          = require('vinyl-source-stream');
 var sass            = require('gulp-sass');
 var minifyCss       = require('gulp-minify-css');
@@ -13,13 +12,15 @@ var stylish         = require('jshint-stylish');
 var rename          = require('gulp-rename');
 var sourcemaps      = require('gulp-sourcemaps');
 var ngAnnotate      = require('gulp-ng-annotate');
-var del             = require('del');
-var mocha           = require('gulp-mocha');
 var Server          = require('karma').Server;
+var runSequence     = require('run-sequence');
+var clean           = require('gulp-clean');
+var runSequence     = require('run-sequence');
 
-gulp.task('uniteLibsFiles', function () {
-    var jsFilter = filter('**/*.js', {restore: true});
-    var cssFilter = filter('**/*.css', {restore: true});
+
+gulp.task('libs', function () {
+    var jsFilter    = filter('**/*.js', {restore: true});
+    var cssFilter   = filter('**/*.css', {restore: true});
 
     return gulp.src('./bower.json')
         .pipe(mainBowerFiles({
@@ -44,25 +45,21 @@ gulp.task('uniteLibsFiles', function () {
         .pipe(gulp.dest('./public/libs'));
 });
 
-gulp.task('browserify', function () {
-    return browserify({
-        entries: ['./src/app/app.js'],
-            debug: true
-        })
-        .bundle()
-        .pipe(source('app.js'))
-        .pipe(jshint())
-        .pipe(jshint.reporter(stylish))
-        .pipe(gulp.dest('./public/js'));
+gulp.task('icons', function () {
+    return gulp.src('./bower_components/bootstrap/dist/fonts/**.*')
+        .pipe(gulp.dest('./public/fonts/'));
 });
 
-gulp.task('js', ['browserify'], function () {
-    return gulp.src('./public/js/app.js')
-    	  .pipe(ngAnnotate())
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest('./public/js'))
+gulp.task('js', function () {
+  return gulp.src('./src/app/**/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(jshint())
+    .pipe(jshint.reporter(stylish))
+    .pipe(ngAnnotate())
+    .pipe(concat('bundle.js'))
+    .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./public/js'));
 });
 
 gulp.task('sass', function () {
@@ -85,38 +82,38 @@ gulp.task('view', function () {
 });
 
 gulp.task('image', function () {
-    return gulp.src(['./src/app/images/*.jpg', './src/app/images/*.ico' ])
-        .pipe(gulp.dest('./public/images'));
+    return gulp.src(['./src/app/assets/images/*.jpg', './src/app/assets/images/*.ico' ])
+        .pipe(gulp.dest('./public/assets/images'));
 });
 
 gulp.task('watch', function () {
-    gulp.watch('bower.json', ['uniteLibsFiles']);
+    gulp.watch('bower.json', ['libs']);
     gulp.watch('./src/app/**/*.js', ['js']);
     gulp.watch('./src/app/**/*.css', ['css']);
     gulp.watch('./src/app/**/*.html', ['view']);
-    gulp.watch('./src/app/**/*.jpg', ['image']);
 });
 
 gulp.task('clean', function () {
-    del('./public/**/*');
+    return gulp.src('./public/', {read: false})
+        .pipe(clean());
 });
 
-gulp.task('test', function(done){
+gulp.task('karma', function (done) {
     return new Server({
-        configFile: __dirname + '/tests/karma.conf.js',
+        configFile: __dirname + '/src/tests/karma.config.js',
         singleRun: true
     }, done).start();
 });
 
-gulp.task('testb', function(){
-    return gulp.src(['./tests/app/**/*-spec.js'], {
-        read: false
-    })
-    .pipe(mocha({ reporter: 'list'}));
+gulp.task('angular', ['icons', 'libs', 'css', 'view', 'js', 'image']);
+
+gulp.task('default', ['clean']);
+
+gulp.task('build', function () {
+    runSequence('default', ['angular'], 'watch');
+    console.log('Gulp run!');
 });
 
-gulp.task('angular', ['image', 'uniteLibsFiles', 'css', 'js', 'view']);
-
-gulp.task('default', ['clean', 'angular', 'watch'], function () {
-    console.log('Success!');
-});
+gulp.task('test', ['karma'], function () {
+    console.log('Tests run!');
+})
